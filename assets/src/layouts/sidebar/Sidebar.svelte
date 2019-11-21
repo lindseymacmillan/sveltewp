@@ -27,8 +27,8 @@
     }
     .sidebar :global(.branding) {
         color: #fff;
+        height: 240px;
         background: rgb(77, 178, 196);
-        padding: 46px 16px 16px 16px;
     }
     .primary {
         display: flex;
