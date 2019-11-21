@@ -1,0 +1,5 @@
+.DS_Store
+node_modules
+assets/dist/bundle.*
+package-lock.json
+.psd
