@@ -54,22 +54,35 @@ class Content_API extends API {
         return $post;
     }
 
+    public function url_to_content($url) {
+
+        $result = [
+            'type' => 'not_found',
+            'title' => 'Error 404',
+            'content' => '<p>Content could not be found.</p>'
+        ];
+
+        $id = url_to_postid($url);
+        if ($id !== 0) {
+            $post = get_post($id);
+            $result['type'] = 'content';
+            $result['title'] = $post->post_title;
+            $result['content'] = $post->post_content;
+        } else {
+            $contents = file_get_contents($url);
+            $result['type'] = 'unknown';
+            $result['html'] = $contents;
+        }
+
+        return $result;
+
+    }
+
     public function action_fetch($data) {
 
         $url = $data['url'];
-        $id = url_to_postid($url);
-
-        if ($id !== 0) {
-            $post = get_post($id);
-            $result = [
-                'id' => $id,
-                'title' => $post->post_title,
-                'content' => $post->post_content,
-            ];
-        } else {
-            $result = 'NOT_FOUND';
-        }
-
+        $result = $this->url_to_content($url);
+        
         return $result;
     }
 

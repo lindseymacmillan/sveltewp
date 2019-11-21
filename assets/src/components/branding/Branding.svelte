@@ -8,9 +8,9 @@
     .link {
         display: contents;
     }
-    .branding {
-        background: rgb(252, 156, 156);
-        padding: 16px;
+    a {
+        color: inherit;
+        text-decoration: none;
     }
     h2, p {
         margin: 0;

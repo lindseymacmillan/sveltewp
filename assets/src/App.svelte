@@ -13,6 +13,8 @@
         const link = evt.target.closest('a')
         if (link && link.href) {
             if (link.href.includes(siteUrl)) {
+                const type = link.getAttribute('data-item-type')
+                const id = link.getAttribute('data-item-id')
                 evt.preventDefault()
                 content.fetch({url: link.href, history: 'push'})
             }

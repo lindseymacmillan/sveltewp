@@ -4,7 +4,7 @@ import qs from 'qs'
 
 function createContent() {
 
-    const { subscribe, set, update } = writable('<h3>Some content</h3>');
+    const { subscribe, set, update } = writable(content_data.content);
     
     const fetchContent = (args) => {
 
@@ -19,7 +19,54 @@ function createContent() {
         )
         .then(function (response) {
             const data = response.data.return
-            if (data !== 'NOT_FOUND') {
+            switch (data.type) {
+                case 'content':
+                    set(data.content)
+                    document.title = data.title
+                    if (args.history) {
+                        const state = {
+                            url: args.url,
+                            title: data.title
+                        }
+                        switch (args.history) {
+                            case 'push':
+                                history.pushState(state, data.title, args.url);
+                                break;
+                            case 'replace':
+                                history.replaceState(state, data.title, args.url);
+                                break;
+                        }
+                    }
+                    break;
+                case 'unknown':
+                    const el = document.createElement( 'html' );
+                    el.innerHTML = data.html;
+                    const script = el.querySelector('#content-data')
+                    eval(script.innerHTML)
+
+                    const title = content_data.title
+                    const content = content_data.content
+
+                    set(content)
+                    document.title = title
+
+                    if (args.history) {
+                        const state = {
+                            url: args.url,
+                            title: title
+                        }
+                        switch (args.history) {
+                            case 'push':
+                                history.pushState(state, title, args.url);
+                                break;
+                            case 'replace':
+                                history.replaceState(state, title, args.url);
+                                break;
+                        }
+                    }
+                    break;
+            }
+            if (data.type == 'content') {
                 set(data.content)
                 document.title = data.title
                 if (args.history) {
@@ -37,7 +84,7 @@ function createContent() {
                     }
                 }
             } else {
-                window.location.href = args.url
+                //window.location.href = args.url
             }
         })
         .then(function (error) {
